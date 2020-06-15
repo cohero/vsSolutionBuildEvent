@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,6 +30,11 @@ namespace net.r_eg.vsSBE
         /// Useful for clients, for example with IEntryPointClient.
         /// </summary>
         event EventHandler<DataArgs<bool>> DebugModeUpdated;
+
+        /// <summary>
+        /// When IAppSettings.WorkPath was updated.
+        /// </summary>
+        event EventHandler<DataArgs<string>> WorkPathUpdated;
 
         /// <summary>
         /// Debug mode for application.
@@ -85,7 +90,7 @@ namespace net.r_eg.vsSBE
         /// <summary>
         /// OWP item name by default.
         /// </summary>
-        string DefaultOWPItem { get; set; }
+        string DefaultOWPItem { get; }
 
         /// <summary>
         /// Updates working path for library.

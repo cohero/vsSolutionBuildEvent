@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System;
 using System.Collections.Generic;
+using net.r_eg.EvMSBuild;
 using net.r_eg.vsSBE.Exceptions;
 
 namespace net.r_eg.vsSBE.UI.WForms.Wizards.Version
@@ -101,7 +103,7 @@ namespace net.r_eg.vsSBE.UI.WForms.Wizards.Version
                     return steps[type];
                 }
                 case StepsType.Struct: {
-                    steps[type] = new StepStruct(new MSBuild.Parser(env)) {
+                    steps[type] = new StepStruct(MSBuild.MakeEvaluator(env)) {
                         fnumber = StepStruct.NumberType.NativeStruct
                     };
                     return steps[type];
@@ -124,7 +126,7 @@ namespace net.r_eg.vsSBE.UI.WForms.Wizards.Version
                     return steps[type];
                 }
             }
-            throw new NotFoundException("getStep: the type - `{0}` is not found.", type);
+            throw new NotSupportedException($"getStep: the type - `{type}` is not found.");
         }
     }
 }

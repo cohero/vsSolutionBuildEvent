@@ -1,7 +1,7 @@
 ﻿/*
  * The MIT License (MIT)
  * 
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ namespace net.r_eg.vsSBE.CI.MSBuild
         /// <summary>
         /// Specifies properties for solution.
         /// </summary>
-        public Dictionary<string, string> Properties;
+        public IDictionary<string, string> Properties;
 
         /// <summary>
         /// Specifies raw Property from MSBuild Command-Line.
@@ -56,6 +56,6 @@ namespace net.r_eg.vsSBE.CI.MSBuild
         /// <summary>
         /// User-defined arguments to CIM manager.
         /// </summary>
-        public Dictionary<string, string> Args;
+        public IDictionary<string, string> Args;
     }
 }

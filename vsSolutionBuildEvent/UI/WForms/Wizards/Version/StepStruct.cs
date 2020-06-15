@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +17,8 @@
 
 using System;
 using System.Collections.Generic;
+using net.r_eg.EvMSBuild;
+using net.r_eg.MvsSln;
 
 namespace net.r_eg.vsSBE.UI.WForms.Wizards.Version
 {
@@ -89,17 +91,17 @@ namespace net.r_eg.vsSBE.UI.WForms.Wizards.Version
         }
 
         /// <param name="parser"></param>
-        public StepStruct(MSBuild.Parser parser)
+        public StepStruct(IEvMSBuild parser)
             : this()
         {
             try {
-                namspace = parser.getProperty("RootNamespace");
+                namspace = parser.GetPropValue(PropertyNames.PRJ_NAMESPACE);
             }
             catch(Exception ex) {
                 Log.Debug("Wizard-Version: RootNamespace failed - `{0}`", ex.Message);
             }
 
-            if(namspace == MSBuild.Parser.PROP_VALUE_DEFAULT) {
+            if(namspace == PropertyNames.UNDEFINED) {
                 namspace = "MyNamespace";
             }
         }

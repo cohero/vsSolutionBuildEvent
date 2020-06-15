@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using net.r_eg.vsSBE.Events;
 using net.r_eg.vsSBE.Logger;
@@ -136,6 +137,10 @@ namespace net.r_eg.vsSBE
             Guid id = (upane != null)? upane.Guid : GuidList.OWP_SBE;
             paneDetach();
 
+#if VSSDK_15_AND_NEW
+            ThreadHelper.ThrowIfNotOnUIThread(); //TODO: upgrade to 15
+#endif
+
             if(ow != null) {
                 ow.DeletePane(ref id);
             }
@@ -246,11 +251,11 @@ namespace net.r_eg.vsSBE
         {
             LogLevel oLevel = LogLevel.FromString(level);
 
-#if !DEBUG
+//#if !DEBUG
             if(oLevel < LogLevel.Info && !Settings._.DebugMode) {
                 return;
             }
-#endif
+//#endif
 
             var log = _lazy.Value;
             log.write(log.format(level, message, stamp), level);

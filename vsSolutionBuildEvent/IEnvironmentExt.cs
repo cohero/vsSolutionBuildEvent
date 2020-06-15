@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,16 +19,13 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace net.r_eg.vsSBE
 {
-    /// <summary>
-    /// Extended variant of environment
-    /// </summary>
     public interface IEnvironmentExt
     {
         /// <summary>
-        /// Gets project name from IVsHierarchy
+        /// Gets project name from IVsHierarchy.
         /// </summary>
         /// <param name="pHierProj"></param>
-        /// <param name="force">Load in global collection with __VSHPROPID.VSHPROPID_ExtObject if true value</param>
+        /// <param name="force">Load in global collection with __VSHPROPID.VSHPROPID_ExtObject if true.</param>
         /// <returns></returns>
         string getProjectNameFrom(IVsHierarchy pHierProj, bool force);
     }

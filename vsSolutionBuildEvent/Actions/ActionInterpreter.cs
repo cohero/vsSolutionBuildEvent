@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,7 @@
 */
 
 using System.Linq;
+using net.r_eg.SobaScript.Exceptions;
 using net.r_eg.vsSBE.Events;
 using net.r_eg.vsSBE.Exceptions;
 
@@ -34,7 +35,7 @@ namespace net.r_eg.vsSBE.Actions
         public override bool process(ISolutionEvent evt)
         {
             if(((IModeInterpreter)evt.Mode).Handler.Trim().Length < 1) {
-                throw new NotFoundException("Interpreter: Handler is empty or not selected.");
+                throw new CompilerException("Interpreter: Handler is empty or not selected.");
             }
 
             string script   = ((IModeInterpreter)evt.Mode).Command;
@@ -60,7 +61,7 @@ namespace net.r_eg.vsSBE.Actions
 
             string handler = ((IModeInterpreter)evt.Mode).Handler;
             if(evt.SupportMSBuild) {
-                handler = cmd.MSBuild.parse(handler);
+                handler = cmd.MSBuild.Eval(handler);
             }
 
             shell(evt, string.Format("{0} {1}", handler, script));

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,22 +21,16 @@ using System.CodeDom.Compiler;
 namespace net.r_eg.vsSBE.Exceptions
 {
     [Serializable]
-    public class CompilerException: SBEException
+    public class CompilerException: UnspecSBEException
     {
+        public CompilerException(CompilerError error)
+            : base(error.ToString(), error)
+        {
+
+        }
+
         public CompilerException(string message)
             : base(message)
-        {
-
-        }
-
-        public CompilerException(CompilerError error)
-            : base(error.ToString())
-        {
-
-        }
-
-        public CompilerException(string message, params object[] args)
-            : base(message, args)
         {
 
         }

@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +17,7 @@
 
 using System;
 using System.Linq;
+using net.r_eg.MvsSln.Log;
 using NLog;
 using NLog.Config;
 using NLog.Filters;
@@ -44,10 +45,7 @@ namespace net.r_eg.vsSBE.Logger
                                                             Action      = FilterResult.Ignore,
                                                         };
 
-        /// <summary>
-        /// object synch.
-        /// </summary>
-        private Object _lock = new Object();
+        private readonly object sync = new object();
 
         /// <summary>
         /// Configure logger by default.
@@ -74,14 +72,21 @@ namespace net.r_eg.vsSBE.Logger
         {
             this.target = target;
 
-            lock(_lock)
+            lock(sync)
             {
                 LogManager.ConfigurationChanged -= onCfgLoggerChanged;
                 LogManager.ConfigurationChanged += onCfgLoggerChanged;
+
                 initLoggerCfg();
+
+                LSender.SReceived -= onSReceived;
+                LSender.SReceived += onSReceived;
+
+                Components.LSender.Sent -= onLSenderSent;
+                Components.LSender.Sent += onLSenderSent;
             }
             
-            Log.Trace(String.Format("Log('{0}') is configured for: '{1}'", target.ClassName, GuidList.PACKAGE_LOGGER));
+            Log.Trace($"Log('{target.ClassName}') is configured for: '{GuidList.PACKAGE_LOGGER}'");
         }
 
         /// <summary>
@@ -147,9 +152,34 @@ namespace net.r_eg.vsSBE.Logger
         /// <param name="e"></param>
         private void onCfgLoggerChanged(object sender, LoggingConfigurationChangedEventArgs e)
         {
-            fixLoggerCfg(e.OldConfiguration); // if we are in point after first initialization
-            fixLoggerCfg(e.NewConfiguration); // if this is raised from others
+            fixLoggerCfg(e.ActivatedConfiguration /*NLog PR#1897: OldConfiguration*/); // if we're at the point after first initialization
+            fixLoggerCfg(e.DeactivatedConfiguration /*NLog PR#1897: NewConfiguration*/); // if this was raised from others
+
             initLoggerCfg(); // we also should be ready to SimpleConfigurator from other assemblies etc.
+        }
+
+        private void onSReceived(object sender, Message e)
+        {
+            Log._.NLog.Log
+            (
+                LogLevel.FromOrdinal
+                (
+                    (int)(e.type == Message.Level.Info ? Message.Level.Debug : e.type)
+                ), 
+                $"{nameof(MvsSln)}: {e.content}"
+            );
+        }
+
+        private void onLSenderSent(object sender, Components.Message e)
+        {
+            Log._.NLog.Log
+            (
+                LogLevel.FromOrdinal
+                (
+                    (int)(e.level == Components.MsgLevel.Info ? Components.MsgLevel.Debug : e.level)
+                ),
+                $"{sender.GetType().Name}: {e.content}"
+            );
         }
     }
 }

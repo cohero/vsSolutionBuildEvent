@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -84,7 +84,7 @@ namespace net.r_eg.vsSBE.Configuration
                 StringEscapeHandling    = StringEscapeHandling.EscapeNonAscii,
                 Formatting              = Formatting.Indented,
                 MissingMemberHandling   = MissingMemberHandling.Ignore,
-                TypeNameAssemblyFormat  = FormatterAssemblyStyle.Simple,
+                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
             };
 
             settings.Converters.Add(new StringEnumConverter{ 
@@ -103,7 +103,7 @@ namespace net.r_eg.vsSBE.Configuration
         public TOut deserialize(string data)
         {
             return JsonConvert.DeserializeObject<TOut>(data, new JsonSerializerSettings() {
-                Binder = new JsonSerializationBinder()
+                SerializationBinder = new JsonSerializationBinder()
             });
         }
 
@@ -117,7 +117,7 @@ namespace net.r_eg.vsSBE.Configuration
             using(JsonTextReader reader = new JsonTextReader(stream))
             {
                 JsonSerializer js = new JsonSerializer() {
-                    Binder = new JsonSerializationBinder() 
+                    SerializationBinder = new JsonSerializationBinder() 
                 };
                 return js.Deserialize<TOut>(reader);
             }

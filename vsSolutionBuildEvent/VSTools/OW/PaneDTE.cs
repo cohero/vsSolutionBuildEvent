@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -67,7 +67,7 @@ namespace net.r_eg.vsSBE.VSTools.OW
         public PaneDTE(EnvDTE80.DTE2 dte2, string name)
         {
             if(dte2 == null) {
-                throw new ArgumentNullException("dte2", "cannot be null");
+                throw new ArgumentNullException(nameof(dte2));
             }
 
             try {
@@ -77,7 +77,7 @@ namespace net.r_eg.vsSBE.VSTools.OW
                 pane = dte2.ToolWindows.OutputWindow.OutputWindowPanes.Add(name);
             }
             catch(Exception ex) {
-                Log.Error("Log :: inner exception: '{0}'", ex.ToString());
+                Log.Error($"PaneDTE init: '{ex.Message}'");
             }
         }
     }

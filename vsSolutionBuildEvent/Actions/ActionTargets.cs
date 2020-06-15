@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
+using net.r_eg.MvsSln;
 using net.r_eg.vsSBE.Events;
 
 namespace net.r_eg.vsSBE.Actions
@@ -83,11 +83,12 @@ namespace net.r_eg.vsSBE.Actions
             string command = ((IModeTargets)evt.Mode).Command;
             ProjectRootElement root = getXml(parse(evt, command));
             
-            BuildRequestData request = new BuildRequestData(
-                                            new ProjectInstance(root, propertiesByDefault(evt), root.ToolsVersion, ProjectCollection.GlobalProjectCollection), 
-                                            new string[] { ENTRY_POINT }, 
-                                            new HostServices()
-                                       );
+            var request = new BuildRequestData
+            (
+                new ProjectInstance(root, propertiesByDefault(evt), root.ToolsVersion, ProjectCollection.GlobalProjectCollection), 
+                new string[] { ENTRY_POINT }, 
+                new HostServices()
+            );
 
             // holy hedgehogs...
 
@@ -140,34 +141,34 @@ namespace net.r_eg.vsSBE.Actions
         /// <returns></returns>
         protected bool build(BuildManager manager, BuildRequestData request, bool silent = true)
         {
-            BuildResult result = manager.Build(new BuildParameters()
-                                                    {
-                                                        //MaxNodeCount = 12,
-                                                        Loggers = new List<ILogger>() {
-                                                                        new MSBuildLogger() {
-                                                                            Silent = silent
-                                                                        }
-                                                                  }
-                                                    }, 
-                                                    request);
+            BuildResult result = manager.Build
+            (
+                new BuildParameters()
+                {
+                    //MaxNodeCount = 12,
+                    Loggers = new List<ILogger>() {
+                                    new MSBuildLogger() {
+                                        Silent = silent
+                                    }
+                              }
+                }, 
+                request
+            );
 
-            return (result.OverallResult == BuildResultCode.Success);
+            return result.OverallResult == BuildResultCode.Success;
         }
 
         protected Dictionary<string, string> propertiesByDefault(ISolutionEvent evt)
-        {
-            Dictionary<string, string> prop = new Dictionary<string, string>(cmd.Env.getProject(null).GlobalProperties);
-            
-            prop.Add("ProjectName", String.Format("_{0}", evt.Name));
-            prop.Add("ActionName", evt.Name);
-            prop.Add("BuildType", cmd.Env.BuildType.ToString());
-            prop.Add("EventType", cmd.EventType.ToString());
-            prop.Add("SupportMSBuild", evt.SupportMSBuild.ToString());
-            prop.Add("SupportSBEScripts", evt.SupportSBEScripts.ToString());
-            prop.Add("SolutionActiveCfg", cmd.Env.SolutionActiveCfgString);
-            prop.Add("StartupProject", cmd.Env.StartupProjectString);
-
-            return prop;
-        }
+            => new Dictionary<string, string>(cmd.Env.getProject(null).GlobalProperties)
+            {
+                { PropertyNames.PRJ_NAME, $"_{evt.Name}" },
+                { "ActionName", evt.Name },
+                { "BuildType", cmd.Env.BuildType.ToString() },
+                { "EventType", cmd.EventType.ToString() },
+                { "SupportMSBuild", evt.SupportMSBuild.ToString() },
+                { "SupportSBEScripts", evt.SupportSBEScripts.ToString() },
+                { "SolutionActiveCfg", cmd.Env.SolutionActiveCfgString },
+                { "StartupProject", cmd.Env.StartupProjectString }
+            };
     }
 }

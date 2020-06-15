@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,14 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using net.r_eg.vsSBE.Exceptions;
+using System;
 
 namespace net.r_eg.vsSBE.Configuration.User
 {
     /// <summary>
     /// Manager of accessing to remote value.
     /// </summary>
-    public class Manager: IManager
+    internal class Manager: IManager
     {
         /// <summary>
         /// Unspecified raw value.
@@ -33,14 +33,13 @@ namespace net.r_eg.vsSBE.Configuration.User
             {
                 checkOnNull();
 
-                if(value.Type == LinkType.CacheHeader)
-                {
+                //if(value.Type == LinkType.CacheHeader)
+                //{
                     if(!data.Cache.ContainsKey(value.Guid)) {
                         data.Cache[value.Guid] = new Cache();
                     }
                     return data.Cache[value.Guid];
-                }
-                throw new InvalidArgumentException("Configuration Manager: not supported type '{0}'", value.Type);
+                //}
             }
         }
 
@@ -112,11 +111,11 @@ namespace net.r_eg.vsSBE.Configuration.User
         protected void checkOnNull()
         {
             if(data == null) {
-                throw new InvalidArgumentException("Configuration Manager: container is not initialized.");
+                throw new ArgumentException("Configuration Manager: container is not initialized.");
             }
 
             if(value == null) {
-                throw new InvalidArgumentException("Configuration Manager: IUserValue value is not initialized.");
+                throw new ArgumentException("Configuration Manager: IUserValue value is not initialized.");
             }
         }
     }

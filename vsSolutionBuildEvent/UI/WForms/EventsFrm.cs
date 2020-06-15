@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2016  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,15 +20,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using net.r_eg.SobaScript;
+using net.r_eg.SobaScript.Mapper;
 using net.r_eg.vsSBE.Bridge;
 using net.r_eg.vsSBE.Events;
 using net.r_eg.vsSBE.Events.CommandEvents;
 using net.r_eg.vsSBE.Extensions;
-using net.r_eg.vsSBE.SBEScripts;
-using net.r_eg.vsSBE.SBEScripts.Dom;
 using net.r_eg.vsSBE.UI.WForms.Components;
 using net.r_eg.vsSBE.UI.WForms.Controls;
-using DomIcon = net.r_eg.vsSBE.SBEScripts.Dom.Icon;
 
 namespace net.r_eg.vsSBE.UI.WForms
 {
@@ -37,7 +36,7 @@ namespace net.r_eg.vsSBE.UI.WForms
     /// ...when it's only started and when we had no any big plans before...
     /// Thus, for all new, I strongly recommend MVVM or similar pattern to improve IoC and more.
     /// </summary>
-    public partial class EventsFrm: Form, ITransfer
+    internal partial class EventsFrm: Form, ITransfer
     {
         public const int WM_SYSCOMMAND  = 0x0112;
         public const int SC_RESTORE     = 0xF120;
@@ -167,30 +166,27 @@ namespace net.r_eg.vsSBE.UI.WForms
             MessageBox.Show(String.Format("The new action `{0}`:\n`{1}` has been added.", evt.Name, evt.Caption), "New action");
         }
 
-        /// <param name="bootloader"></param>
-        public EventsFrm(IBootloader bootloader)
+        /// <param name="loader"></param>
+        public EventsFrm(Bootloader loader)
         {
             InitializeComponent();
             defaultSizes();
             updateColors();
 
-            IInspector inspector    = new Inspector(bootloader);
-            logic                   = new Logic.Events(bootloader, inspector);
-            textEditor.codeCompletionInit(inspector, new MSBuild.Parser(bootloader.Env, bootloader.UVariable));
+            IInspector inspector    = new Inspector(loader.Soba);
+            logic                   = new Logic.Events(loader, inspector);
+            textEditor.codeCompletionInit(inspector, loader.Soba.EvMSBuild);
             
             Icon = Resource.Package_32;
             toolTip.SetToolTip(pictureBoxWarnWait, Resource.StringWarnForWaiting);
 
+            Text = $"{loader.Env.SolutionFileName} - {Settings.APP_NAME}";
+
 #if DEBUG
-            this.Text                       = String.Format("{0} [Debug version]", Settings.APP_NAME);
-            toolStripMenuDebugMode.Checked  = true;
-            toolStripMenuDebugMode.Enabled  = false;
-            toolStripMenuVersion.Text       = String.Format("based on {0}", Version.branchSha1);
+            Text += " [Debug version]";
+            toolStripMenuVersion.Text = $"based on {Version.B_SHA1}";
 #else
-            if(Version.branchName.ToLower() != "releases") {
-                this.Text = String.Format("{0}  [Unofficial release]", Settings.APP_NAME);
-            }
-            toolStripMenuVersion.Text = String.Format("v{0} [ {1} ]", Version.numberString, Version.branchSha1);
+            toolStripMenuVersion.Text = $"v{Version.S_NUM}+{Version.B_SHA1}";
 #endif
             menuCfgSuppressDualCmd.Checked = Settings.CfgUser.Global.SuppressDualCommand;
 
@@ -354,8 +350,8 @@ namespace net.r_eg.vsSBE.UI.WForms
                     continue;
                 }
 
-                object customIn  = Value.packArgument(row.Cells[dgvCEFiltersColumnCustomIn.Name].Value);
-                object customOut = Value.packArgument(row.Cells[dgvCEFiltersColumnCustomOut.Name].Value);
+                object customIn  = Value.PackArgument(row.Cells[dgvCEFiltersColumnCustomIn.Name].Value);
+                object customOut = Value.PackArgument(row.Cells[dgvCEFiltersColumnCustomOut.Name].Value);
                 object guid      = row.Cells[dgvCEFiltersColumnGuid.Name].Value;
 
                 list.Add(new Filter()
@@ -542,7 +538,7 @@ namespace net.r_eg.vsSBE.UI.WForms
                 return;
             }
             foreach(IFilter f in evt.Filters) {
-                dgvCEFilters.Rows.Add(f.Guid, f.Id, Value.pack(f.CustomIn), Value.pack(f.CustomOut), f.Description, f.Cancel, f.Pre, f.Post);
+                dgvCEFilters.Rows.Add(f.Guid, f.Id, Value.Pack(f.CustomIn), Value.Pack(f.CustomOut), f.Description, f.Cancel, f.Pre, f.Post);
             }
         }
 
@@ -967,7 +963,7 @@ namespace net.r_eg.vsSBE.UI.WForms
             }
 
             string tFormat = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern + " .fff";
-            dgvCESniffer.Rows.Add(DateTime.Now.ToString(tFormat), pre, guid, id, Value.pack(customIn), Value.pack(customOut), Util.enumViewBy(guid, id));
+            dgvCESniffer.Rows.Add(DateTime.Now.ToString(tFormat), pre, guid, id, Value.Pack(customIn), Value.Pack(customOut), Util.enumViewBy(guid, id));
         }
 
         protected void addFilterFromSniffer(DataGridView sniffer, DataGridView filter)
@@ -1342,10 +1338,8 @@ namespace net.r_eg.vsSBE.UI.WForms
 
         private void toolStripMenuDebugMode_Click(object sender, EventArgs e)
         {
-#if !DEBUG
             App.UserConfig.Global.DebugMode = App.DebugMode = toolStripMenuDebugMode.Checked = !toolStripMenuDebugMode.Checked;
             logic.updateUserCfg();
-#endif
         }
 
         private void menuCfgSuppressDualCmd_Click(object sender, EventArgs e)
@@ -1445,20 +1439,20 @@ namespace net.r_eg.vsSBE.UI.WForms
             {
                 Bitmap bmap = DomIcon.definition;
                 switch(info.Type) {
-                    case InfoType.Property: {
+                    case NodeType.Property: {
                         bmap = DomIcon.property;
                         break;
                     }
-                    case InfoType.Method: {
+                    case NodeType.Method: {
                         bmap = DomIcon.function;
                         break;
                     }
-                    case InfoType.Definition: {
+                    case NodeType.Definition: {
                         bmap = DomIcon.definition;
                         break;
                     }
                 }
-                dgvComponentInfo.Rows.Add(bmap, info.Displaying, (info.Signature == null)? "" : info.Signature.Replace("\n", "  \n"), info.Description);
+                dgvComponentInfo.Rows.Add(bmap, info.Overname, (info.Signature == null)? "" : info.Signature.Replace("\n", "  \n"), info.Description);
             }
         }
 
@@ -1552,7 +1546,7 @@ namespace net.r_eg.vsSBE.UI.WForms
             if(Util.focusForm(frmWizVersion)) {
                 return;
             }
-            frmWizVersion = new Wizards.VersionFrm(logic.Bootloader, this);
+            frmWizVersion = new Wizards.VersionFrm(logic.Loader, this);
             frmWizVersion.Show();
         }
 
@@ -1859,9 +1853,7 @@ namespace net.r_eg.vsSBE.UI.WForms
         private void toolStripMenuBug_DropDownOpening(object sender, EventArgs e)
         {
 
-#if !DEBUG
             toolStripMenuDebugMode.Checked = App.DebugMode;
-#endif
             
             Func<string, bool> IsIgnoreLevel = (string level) =>
             {

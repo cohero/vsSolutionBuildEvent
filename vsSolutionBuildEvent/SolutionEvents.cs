@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2016  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,7 @@
 */
 
 using System;
+using net.r_eg.SobaScript.Exceptions;
 using net.r_eg.vsSBE.Configuration;
 using net.r_eg.vsSBE.Events;
 using net.r_eg.vsSBE.Exceptions;
@@ -211,7 +212,7 @@ namespace net.r_eg.vsSBE
                 }
             }
 
-            throw new NotFoundException("getEvent: the event type '{0}' is not found.", type);
+            throw new NotFoundException(type);
         }
     }
 }

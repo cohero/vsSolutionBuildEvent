@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using net.r_eg.MvsSln.Extensions;
 using net.r_eg.vsSBE.Bridge;
 using net.r_eg.vsSBE.Extensions;
 
@@ -45,7 +46,7 @@ namespace net.r_eg.vsSBE.Clients
         public string Dllpath
         {
             get {
-                return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).PathFormat();
+                return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).DirectoryPathFormat();
             }
         }
 

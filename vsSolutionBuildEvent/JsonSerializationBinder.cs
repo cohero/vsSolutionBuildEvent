@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,14 +17,15 @@
 
 using System;
 using System.Runtime.Serialization;
+using Newtonsoft.Json.Serialization;
 
 namespace net.r_eg.vsSBE
 {
-    public class JsonSerializationBinder: SerializationBinder
+    public class JsonSerializationBinder: SerializationBinder, ISerializationBinder
     {
         public override Type BindToType(string assemblyName, string typeName)
         {
-            return Type.GetType(String.Format("{0}, {1}", typeName, assemblyName));
+            return Type.GetType($"{typeName}, {assemblyName}");
         }
     }
 }

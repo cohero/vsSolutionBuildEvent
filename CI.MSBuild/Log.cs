@@ -1,7 +1,7 @@
 ﻿/*
  * The MIT License (MIT)
  * 
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,19 +27,24 @@ using Microsoft.Build.Framework;
 
 namespace net.r_eg.vsSBE.CI.MSBuild
 {
-    /// <summary>
-    /// TODO: new lightweight logger or NLog from main plugin
-    /// </summary>
+    //TODO: Either use from MvsSln or NLog from main plugin
     internal class Log: ILog
     {
+        internal const string DIAG_KEY = "__vssbe_diag";
+
         /// <summary>
         /// Flag of Diagnostic mode
         /// </summary>
         public bool IsDiagnostic
         {
-            get {
-                return (level == LoggerVerbosity.Diagnostic);
-            }
+            //level == LoggerVerbosity.Diagnostic;
+            get => string.Equals
+            (
+                //TODO: 
+                Environment.GetEnvironmentVariable(DIAG_KEY, EnvironmentVariableTarget.Process)?.Trim(), 
+                "true", 
+                StringComparison.InvariantCultureIgnoreCase
+            );
         }
 
         /// <summary>

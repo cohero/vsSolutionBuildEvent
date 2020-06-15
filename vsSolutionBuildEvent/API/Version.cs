@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,7 +34,7 @@ namespace net.r_eg.vsSBE.API
         /// </summary>
         public string BranchName
         {
-            get { return LibVersion.branchName; }
+            get { return LibVersion.B_NAME; }
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace net.r_eg.vsSBE.API
         /// </summary>
         public string BranchSha1
         {
-            get { return LibVersion.branchSha1; }
+            get { return LibVersion.B_SHA1; }
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace net.r_eg.vsSBE.API
         /// </summary>
         public string BranchRevCount
         {
-            get { return LibVersion.branchRevCount; }
+            get { return LibVersion.B_REVC; }
         }
 
         /// <summary>

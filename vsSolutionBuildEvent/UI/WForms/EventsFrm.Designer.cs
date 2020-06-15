@@ -509,7 +509,7 @@
             // 
             this.menuSBEScript.Name = "menuSBEScript";
             this.menuSBEScript.Size = new System.Drawing.Size(215, 22);
-            this.menuSBEScript.Text = "SBE-Scripts Testing tool";
+            this.menuSBEScript.Text = "Testing tool";
             this.menuSBEScript.Click += new System.EventHandler(this.menuSBEScript_Click);
             // 
             // toolStripSeparator9
@@ -997,7 +997,7 @@
             this.dgvActions.ContextMenuStrip = this.contextMenuActions;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(252)))), ((int)(((byte)(248)))));
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -1227,7 +1227,7 @@
             this.checkBoxSBEScriptSupport.Name = "checkBoxSBEScriptSupport";
             this.checkBoxSBEScriptSupport.Size = new System.Drawing.Size(120, 17);
             this.checkBoxSBEScriptSupport.TabIndex = 21;
-            this.checkBoxSBEScriptSupport.Text = "SBE-Scripts support";
+            this.checkBoxSBEScriptSupport.Text = "SobaScript support";
             this.checkBoxSBEScriptSupport.UseVisualStyleBackColor = true;
             this.checkBoxSBEScriptSupport.CheckedChanged += new System.EventHandler(this.checkBoxSBEScriptSupport_CheckedChanged);
             // 

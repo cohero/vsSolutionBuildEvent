@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2016  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -192,21 +192,21 @@ namespace net.r_eg.vsSBE.UI.WForms
 
             space = new DeepSpace(pictureBoxSpace.CreateGraphics(), pictureBoxSpace.Width, pictureBoxSpace.Height);
 
-            labelCopyright.Text = String.Format("Copyright (c) 2013-{0}  Denis Kuzmin (reg) < entry.reg@gmail.com >", Math.Max(2016, DateTime.Now.Year));
+            labelCopyright.Text = String.Format("Copyright (c) 2013-{0}  Denis Kuzmin <entry.reg@gmail.com> GitHub/3F", Math.Max(2019, DateTime.Now.Year));
             string vAPIString   = (new API.Version()).Bridge.Number.ToString(2);
 
 #if !DEBUG
-            labelVersionVal.Text = String.Format("v{0} [ {1} ] API: v{2}", Version.numberWithRevString, Version.branchSha1, vAPIString);
-            if(Version.branchName.ToLower() != "releases") {
-                labelVersionVal.Text += String.Format(" /\"{0}\":{1}", Version.branchName, Version.branchRevCount);
+            labelVersionVal.Text = $"v{Version.S_NUM_REV}+{Version.B_SHA1} API: v{vAPIString}";
+            if(Version.B_NAME.ToLower() != "releases") {
+                labelVersionVal.Text += String.Format(" /\"{0}\":{1}", Version.B_NAME, Version.B_REVC);
             }
 #else
             labelVersionVal.Text = String.Format("v{0} Debug [ {1} ] API: v{2} /\"{3}\":{4}",
-                                                    Version.numberWithRevString,
-                                                    Version.branchSha1,
+                                                    Version.S_NUM_REV,
+                                                    Version.B_SHA1,
                                                     vAPIString,
-                                                    Version.branchName,
-                                                    Version.branchRevCount);
+                                                    Version.B_NAME,
+                                                    Version.B_REVC);
 #endif
         }
 
@@ -242,22 +242,22 @@ namespace net.r_eg.vsSBE.UI.WForms
 
         private void linkLicense_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.openUrl("http://vssbe.r-eg.net/License/");
+            Util.openUrl("https://github.com/3F/vsSolutionBuildEvent/blob/master/LICENSE");
         }
 
         private void linkPage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.openUrl("http://r-eg.net");
+            Util.openUrl("https://github.com/3F");
         }
 
         private void linkLabelDonationHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Util.openUrl("http://vssbe.r-eg.net/Donation/");
+            Util.openUrl("https://3F.github.com/Donation/");
         }
 
         private void pictureBoxDonation_Click(object sender, EventArgs e)
         {
-            Util.openUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=entry%2ereg%40gmail%2ecom&lc=US&item_name=3F%2dOpenSource%20%5b%20github%2ecom%2f3F&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted");
+            Util.openUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=entry%2ereg%40gmail%2ecom&lc=US&item_name=Open%20Source%20%5b%20GitHub%2F3F&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted");
         }
 
         private void pictureBoxDonation_MouseHover(object sender, EventArgs e)

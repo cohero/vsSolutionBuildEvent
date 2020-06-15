@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,7 @@
 */
 
 using System;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace net.r_eg.vsSBE.VSTools.OW
@@ -41,6 +42,10 @@ namespace net.r_eg.vsSBE.VSTools.OW
         /// </summary>
         public void Activate()
         {
+#if VSSDK_15_AND_NEW
+            ThreadHelper.ThrowIfNotOnUIThread(); //TODO: upgrade to 15
+#endif
+
             pane.Activate();
         }
 
@@ -49,6 +54,10 @@ namespace net.r_eg.vsSBE.VSTools.OW
         /// </summary>
         public void Clear()
         {
+#if VSSDK_15_AND_NEW
+            ThreadHelper.ThrowIfNotOnUIThread(); //TODO: upgrade to 15
+#endif
+
             pane.Clear();
         }
 
@@ -58,6 +67,10 @@ namespace net.r_eg.vsSBE.VSTools.OW
         /// <param name="text"></param>
         public void OutputString(string text)
         {
+#if VSSDK_15_AND_NEW
+            ThreadHelper.ThrowIfNotOnUIThread(); //TODO: upgrade to 15
+#endif
+
             pane.OutputString(text);
         }
 
@@ -68,6 +81,10 @@ namespace net.r_eg.vsSBE.VSTools.OW
             if(ow == null) {
                 throw new ArgumentNullException("ow", "cannot be null");
             }
+
+#if VSSDK_15_AND_NEW
+            ThreadHelper.ThrowIfNotOnUIThread(); //TODO: upgrade to 15
+#endif
 
             Guid id = GuidList.OWP_SBE;
             ow.CreatePane(ref id, name, 1, 1);

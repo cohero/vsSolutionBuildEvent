@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2016  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,9 +16,9 @@
 */
 
 using System.Runtime.InteropServices;
+using net.r_eg.EvMSBuild;
+using net.r_eg.SobaScript;
 using net.r_eg.vsSBE.Events;
-using net.r_eg.vsSBE.MSBuild;
-using net.r_eg.vsSBE.SBEScripts;
 
 namespace net.r_eg.vsSBE.Actions
 {
@@ -28,12 +28,12 @@ namespace net.r_eg.vsSBE.Actions
         /// <summary>
         /// SBE-Scripts core
         /// </summary>
-        ISBEScript SBEScript { get; }
+        ISobaScript SBEScript { get; }
 
         /// <summary>
         /// MSBuild core
         /// </summary>
-        IMSBuild MSBuild { get; }
+        IEvMSBuild MSBuild { get; }
 
         /// <summary>
         /// Used environment

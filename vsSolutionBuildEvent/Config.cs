@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,13 +17,10 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
+using net.r_eg.MvsSln.Extensions;
 using net.r_eg.vsSBE.Configuration;
 using net.r_eg.vsSBE.Exceptions;
-using net.r_eg.vsSBE.SBEScripts;
-using net.r_eg.vsSBE.Extensions;
-using net.r_eg.vsSBE.SBEScripts.Components;
 
 namespace net.r_eg.vsSBE
 {
@@ -90,7 +87,7 @@ namespace net.r_eg.vsSBE
         /// <returns>true value if loaded from existing file, otherwise loaded as new.</returns>
         public bool load(string link)
         {
-            Link = link.PathFormat();
+            Link = link.DirectoryPathFormat();
             return load(Link, null);
         }
 
@@ -153,7 +150,7 @@ namespace net.r_eg.vsSBE
                 {
                     Data = deserialize(stream);
                     if(Data == null) {
-                        throw new SBEException("file is empty");
+                        throw new UnspecSBEException("file is empty");
                     }
                     compatibility(stream);
                 }

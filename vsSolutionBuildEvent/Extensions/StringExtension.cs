@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2013-2015  Denis Kuzmin (reg) <entry.reg@gmail.com>
+ * Copyright (c) 2013-2016,2019  Denis Kuzmin < entry.reg@gmail.com > GitHub/3F
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,10 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using net.r_eg.MvsSln;
+using net.r_eg.MvsSln.Extensions;
 
 namespace net.r_eg.vsSBE.Extensions
 {
@@ -49,21 +53,23 @@ namespace net.r_eg.vsSBE.Extensions
         }
 
         /// <summary>
-        /// Formatting path to directory.
+        /// BSTR. Directory where visual studio executable was installed.
+        /// http://technet.microsoft.com/en-us/microsoft.visualstudio.shell.interop.__vsspropid%28v=vs.71%29.aspx
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="ptr">stub.</param>
         /// <returns></returns>
-        public static string PathFormat(this string path)
+        public static string GetDevEnvDir(this string ptr)
         {
-            if(String.IsNullOrWhiteSpace(path)) {
-                return Path.DirectorySeparatorChar.ToString();
-            }
-            path = path.Trim();
+#if VSSDK_15_AND_NEW
+            ThreadHelper.ThrowIfNotOnUIThread(); //TODO: upgrade to 15
+#endif
 
-            if(path[path.Length - 1] != Path.DirectorySeparatorChar) {
-                path += Path.DirectorySeparatorChar;
-            }
-            return path;
+            IVsShell shell = (IVsShell)Package.GetGlobalService(typeof(SVsShell));
+            shell.GetProperty((int)__VSSPROPID.VSSPROPID_InstallDirectory, out object dirObject);
+
+            string dir = (string)dirObject;
+
+            return string.IsNullOrEmpty(dir) ? PropertyNames.UNDEFINED : dir.DirectoryPathFormat();
         }
 
         /// <summary>
